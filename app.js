@@ -80,6 +80,44 @@ app.get('/api/cliente/:id', (req,res) => {
 
 })
 
+app.put('/api/cliente/', (req,res) => {
+    var o_id = new ObjectId(req.body._id);
+    let cliente = req.db.collection("clientes");
+    
+    cliente.updateOne(
+        {"_id":o_id},
+        {$set : {
+                'cliente.nombre' : req.body.nombre,
+                'cliente.apellido' : req.body.apellido
+            }
+        },(err, result) => {
+        if (err){
+            console.log("err: ",err);
+            res.send(false);
+        }else{
+            console.log("result: ",result);
+            res.send(true);
+        }
+    });    
+})
+
+app.delete('/api/cliente/:id', (req,res) => {
+    var o_id = new ObjectId(req.params.id);
+    let clientes = req.db.collection("clientes");
+
+    clientes.deleteOne({"_id":o_id},(err, result) => {
+        if (err){
+            console.log("err: ",err);
+            res.send(false);
+        }else{
+            console.log("result: ",result);
+            res.send(true);
+        }
+    });
+
+})
+
+
 app.get('/*', (req,res) => {
     res.sendFile(path.join(__dirname,'public/index.html' ))
 })
